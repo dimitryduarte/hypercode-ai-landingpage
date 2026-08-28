@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyperCode AI — Software e Capacitação na Velocidade da Luz</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #0B0F17;
+      --card: rgba(30, 41, 59, 0.6);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --cyan: #00F0FF;
+      --indigo: #4F46E5;
+      --white: #F8FAFC;
+      --muted: #94A3B8;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--white);
+      font-family: var(--font);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    #antigravity-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    header.navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 72px;
+      backdrop-filter: blur(16px);
+      background: rgba(11, 15, 23, 0.75);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      z-index: 100;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    .btn-cta {
+      background: linear-gradient(135deg, var(--cyan), var(--indigo));
+      color: #0B0F17;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(0, 240, 255, 0.4);
+    }
+    .btn-secondary {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      background: rgba(255,255,255,0.05);
+    }
+
+    section.hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 60px;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      max-width: 1200px;
+      margin-bottom: 24px;
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, var(--cyan) 0%, #818CF8 50%, var(--indigo) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 90px 24px;
+    }
+    .section-head {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .section-title {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .grid-services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .card-service {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 36px;
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .card-service:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 240, 255, 0.4);
+    }
+    .card-service .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+    .card-service h3 {
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .card-service p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .grid-testimonials {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 32px;
+    }
+    .card-testimonial {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 36px;
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .testimonial-text {
+      font-size: 14.5px;
+      color: #E2E8F0;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-top: 1px solid var(--card-border);
+      padding-top: 18px;
+    }
+    .author-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--indigo));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #0B0F17;
+    }
+    .author-info h4 { font-size: 15px; font-weight: 700; }
+    .author-info a {
+      font-size: 12px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-family: var(--mono);
+    }
+
+    .contact-card {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(11, 15, 23, 0.9) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 44px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .form-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      background: rgba(11, 15, 23, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--cyan);
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 36px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="antigravity-canvas"></canvas>
+
+  <div class="wrapper">
+
+    <header class="navbar">
+      <a href="#" style="text-decoration: none; display: flex; align-items: center;">
+        <svg viewBox="0 0 460 76" width="210" height="34">
+          <defs>
+            <linearGradient id="nav-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00F0FF"/>
+              <stop offset="100%" stop-color="#4F46E5"/>
+            </linearGradient>
+          </defs>
+          <g transform="translate(14, 18)">
+            <path d="M 12 0 L 7 0 C 3 0 0 3.5 0 8 L 0 14 C 0 18 -3.5 20 -7 20 C -3.5 20 0 22 0 26 L 0 32 C 0 36.5 3 40 7 40 L 12 40" fill="none" stroke="url(#nav-grad)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 28 0 L 33 0 C 37 0 40 3.5 40 8 L 40 14 C 40 18 43.5 20 47 20 C 43.5 20 40 22 40 26 L 40 32 C 40 36.5 37 40 33 40 L 28 40" fill="none" stroke="url(#nav-grad)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <text x="82" y="50" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="40" fill="#F8FAFC" letter-spacing="-0.8">HyperCode <tspan fill="url(#nav-grad)">AI</tspan></text>
+        </svg>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#solucoes">Soluções & Consultoria</a></li>
+        <li><a href="#depoimentos">Cases</a></li>
+        <li><a href="#contato">Fale Conosco</a></li>
+      </ul>
+
+      <a href="#contato" class="btn-cta">Acelerar com a HyperCode AI</a>
+    </header>
+
+    <section class="hero">
+      <div class="badge-pill">
+        <span>⚡ APERTEM OS CINTOS PARA A HIPERVELOCIDADE</span>
+      </div>
+      <h1>
+        Chega de esperar meses pelo que pode obter em semanas<br/>
+        <span class="text-gradient">De zero a cem na velocidade da luz</span>
+      </h1>
+      <p>
+        Construímos sistemas corporativos em semanas e capacitamos times de tecnologia a dominarem fluxos de IA no dia a dia. Entregas ultravelozes com tipagem estrita, testes e arquitetura de nível corporativo.
+      </p>
+      <div class="hero-actions">
+        <a href="#contato" class="btn-cta" style="padding: 14px 28px; font-size: 15px;">Acelerar com a HyperCode AI</a>
+        <a href="#solucoes" class="btn-secondary" style="padding: 14px 28px; font-size: 15px;">Explorar Modelos de Atuação</a>
+      </div>
+    </section>
+
+    <section id="solucoes" class="container">
+      <div class="section-head">
+        <span class="section-tag">Arquitetura de Software com IA</span>
+        <h2 class="section-title">Transformando a arte da codificação com excelência</h2>
+      </div>
+
+      <div class="grid-services">
+        <div class="card-service">
+          <div class="icon-box">⚡</div>
+          <h3>Desenvolvimento de Sistemas na velocidade da luz</h3>
+          <p>Construção ponta a ponta de sistemas, aplicativos, sites, MVPs, ERPs industriais, WMS e SaaS complexos em ciclos de semanas, eliminando gargalos de time-to-market.</p>
+        </div>
+
+        <div class="card-service">
+          <div class="icon-box">🧠</div>
+          <h3>Consultoria & Mentoria para Times Dev</h3>
+          <p>Capacitação prática para sua software house. Ensinamos seus programadores a integrarem IA no fluxo diário sem gerar código frágil ou débito técnico oculto.</p>
+        </div>
+
+        <div class="card-service">
+          <div class="icon-box">🤖</div>
+          <h3>Agentes Autônomos & Integrações</h3>
+          <p>Automação inteligente de rotinas operacionais, pipelines de sincronização de marketplaces e fluxos com bancos de dados relacionais seguros.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="depoimentos" class="container" style="background: rgba(15, 23, 42, 0.3); border-radius: 28px;">
+      <div class="section-head">
+        <span class="section-tag">Resultados Reais e Histórias de Sucesso</span>
+        <h2 class="section-title">Quem acelerou com a HyperCode AI</h2>
+      </div>
+
+      <div class="grid-testimonials">
+        <div class="card-testimonial">
+          <p class="testimonial-text">
+            "A HyperCode AI otimizou nossos processos operacionais de ponta a ponta. Eles criaram um software totalmente integrado com os marketplaces dos nossos clientes, construindo um sistema de WMS 100% personalizado que transformou nossa agilidade no fulfillment."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">DS</div>
+            <div class="author-info">
+              <h4>Diogo Santos</h4>
+              <a href="https://loghouse.com.br" target="_blank" rel="noopener">Loghouse Fulfillment ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-testimonial">
+          <p class="testimonial-text">
+            "Trabalhamos lado a lado com a HyperCode AI junto aos nossos engenheiros de IA para criar um aplicativo disruptivo. Eles modernizaram nossos dashboards e sistemas internos com tecnologias atualizadas, tornando o dia a dia muito mais fluido e a experiência de UI/UX extremamente intuitiva."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">FA</div>
+            <div class="author-info">
+              <h4>Frederico Abrahão</h4>
+              <a href="https://psicosistemologia.com.br/" target="_blank" rel="noopener">Psicosistemologia (PSL) ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contato" class="container">
+      <div class="section-head">
+        <span class="section-tag">Próximo Passo</span>
+        <h2 class="section-title">Tire sua ideia do papel hoje</h2>
+      </div>
+
+      <div class="contact-card">
+        <form onsubmit="event.preventDefault(); alert('Mensagem enviada com sucesso! Em breve nossa equipe técnica entrará em contato.');">
+          <div class="form-group">
+            <label>Seu Nome ou Empresa</label>
+            <input type="text" placeholder="Ex: Dimitri / Minha Software House" required>
+          </div>
+          <div class="form-group">
+            <label>E-mail Corporativo</label>
+            <input type="email" placeholder="nome@empresa.com.br" required>
+          </div>
+          <div class="form-group">
+            <label>Qual é o seu objetivo principal?</label>
+            <select style="color: var(--white); background: rgba(11, 15, 23, 0.9);">
+              <option value="dev">Quero construir um software / MVP sob medida</option>
+              <option value="consultoria">Quero consultoria/treinamento de IA para minha equipe dev</option>
+              <option value="automacao">Quero agentes autônomos e automações de processos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Detalhes do Projeto ou Desafio Atual</label>
+            <textarea rows="4" placeholder="Conte brevemente sobre o escopo ou os objetivos da equipe..."></textarea>
+          </div>
+          <button type="submit" class="btn-cta" style="width: 100%; padding: 14px; justify-content: center; font-size: 15px;">
+            Solicitar Proposta & Sessão Técnica
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <div>© 2026 HyperCode AI. Todos os direitos reservados.</div>
+      <div style="font-family: var(--mono); color: var(--cyan);">hypercodeai.com.br</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const canvas = document.getElementById('antigravity-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+    let mouse = { x: null, y: null, radius: 150 };
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      particles = [];
+      const count = Math.floor((width * height) / 14000);
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 2 + 1,
+          density: (Math.random() * 30) + 1,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4
+        });
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        if (mouse.x !== null) {
+          let dx = mouse.x - p.x;
+          let dy = mouse.y - p.y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < mouse.radius) {
+            let force = (mouse.radius - dist) / mouse.radius;
+            p.x -= (dx / dist) * force * p.density;
+            p.y -= (dy / dist) * force * p.density;
+          }
+        }
+
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          let p2 = particles[j];
+          let dx = p.x - p2.x;
+          let dy = p.y - p2.y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110) {
+            ctx.strokeStyle = `rgba(79, 70, 229, ${(1 - dist/110) * 0.25})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
+    window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+    window.addEventListener('resize', resize);
+    resize();
+    animate();
+  </script>
+</body>
+</html>
